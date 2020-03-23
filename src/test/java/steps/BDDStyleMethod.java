@@ -1,10 +1,10 @@
 package steps;
 
 import io.restassured.http.ContentType;
+import org.hamcrest.core.Is;
 
 import java.util.HashMap;
 
-import static io.restassured.RestAssured.authentication;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -40,7 +40,24 @@ public class BDDStyleMethod {
                 .when()
                 .get("http://localhost:3000/posts")
                 .then()
-                .body("author", hasSize(2));
+                .body("author", hasItem("typicode"));
+//                .body("author", hasSize(2));
+    }
+
+    public static void PostWithParam() {
+        HashMap<String, String> postContent = new HashMap<>();
+        postContent.put("id", "3");
+        postContent.put("title", "Cake Java book");
+        postContent.put("author", "Monika Bak");
+
+        given()
+                .contentType(ContentType.JSON)
+                .with()
+                .body(postContent)
+                .when()
+                .post("http://localhost:3000/posts")
+                .then()
+                .body("author", Is.is("Monika Bak"));
     }
 
     public void BodyParamsAuth() {
@@ -58,8 +75,4 @@ public class BDDStyleMethod {
                 .body("access_token", notNullValue());
     }
 
-    public void RestAssuredExtension(){
-        //Arrange
-
-    }
 }
