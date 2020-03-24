@@ -12,4 +12,4 @@ Feature: DeletePosts
     And I perform GET op for "/posts/{postid}"
       | postid |
       | 4      |
-    Then I should not see the body with title as "Walk with dog"
+    Then I "should not" see the body with title as "Walk with dog"

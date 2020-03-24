@@ -7,6 +7,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
+import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNot;
 import util.RestAssuredExtension;
 
@@ -43,9 +44,13 @@ public class DELETEPostSteps {
 
     }
 
-    @Then("^I should not see the body with title as \"([^\"]*)\"$")
-    public void iShouldNotSeeTheBodyWithTitleAs(String title) throws Throwable {
-        assertThat(response.getBody().jsonPath().get("title"), IsNot.not(title));
+    @Then("^I \"([^\"]*)\" see the body with title as \"([^\"]*)\"$")
+    public void iShouldNotSeeTheBodyWithTitleAs(String condition, String title) throws Throwable {
+        if (condition.equalsIgnoreCase("should not")) {
+            assertThat(response.getBody().jsonPath().get("title"), IsNot.not(title));
+        } else {
+            assertThat(response.getBody().jsonPath().get("title"), Is.is(title));
+        }
     }
 
     @And("^I perform GET op for \"([^\"]*)\"$")
