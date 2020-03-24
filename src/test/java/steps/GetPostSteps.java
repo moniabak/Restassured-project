@@ -1,19 +1,22 @@
 package steps;
 
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
+import pojo.Address;
+import pojo.Location;
+import pojo.Posts;
 import util.RestAssuredExtension;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
 
 
 public class GetPostSteps {
@@ -21,12 +24,13 @@ public class GetPostSteps {
 
     @Given("^I perform GET for \"([^\"]*)\"$")
     public void iPerformGETFor(String url) throws Throwable {
-        response = RestAssuredExtension.GetOps(url);
+        response = RestAssuredExtension.GetOpsWithToken(url, response.getBody().jsonPath().get("access_token"));
     }
 
     @Then("^I should see the author name as \"([^\"]*)\"$")
     public void iShouldSeeTheAuthorNameAs(String authorName) throws Throwable {
-        assertThat(response.getBody().jsonPath().get("author"), hasItem("typicode"));
+        Posts posts = response.getBody().as(Posts.class);
+        assertThat(posts.getAuthor(), equalTo(authorName));
     }
 
     @Then("^I should see the author names$")
@@ -44,22 +48,41 @@ public class GetPostSteps {
         BDDStyleMethod.PostWithParam();
     }
 
-    @Given("^I perform POST for \"([^\"]*)\" with body$")
-    public void iPerformPOSTForWithBody(String url, DataTable table) throws Throwable {
+    @Given("^I perform GET for address \"([^\"]*)\"$")
+    public void iPerformGETForAddress(String url, DataTable table) throws Throwable {
         List<List<String>> data = table.raw();
-        //Set body
-        HashMap<String, String> body = new HashMap<>();
-        body.put("name", data.get(1).get(0));
 
-        HashMap<String, String> params = new HashMap<>();
-        params.put("profileNo", data.get(1).get(1));
+        Map<String, String> body = new HashMap<>();
+        body.put("id", data.get(1).get(0));
 
-        //Perform post operation
-        response = RestAssuredExtension.PostOpsWithParams(url, params, body);
+        response = RestAssuredExtension.GetWithPathParams(url, body);
+
     }
 
-    @Then("^I should see the body has name as \"([^\"]*)\"$")
-    public void iShouldSeeTheBodyHasNameAs(String name) throws Throwable {
-        assertThat(response.getBody().jsonPath().get("name"), equalTo(name));
+    @Then("^I should see the street name as \"([^\"]*)\" for the \"([^\"]*)\" address$")
+    public void iShouldSeeTheStreetNameAsForTheAddress(String streetName, String type) throws Throwable {
+        Location[] location = response.getBody().as(Location[].class);
+
+        Address address = location[0].getAddress().stream().filter(x->x.getType().equalsIgnoreCase(type)).findFirst().orElse(null);
+
+        assertThat(address.getStreet(), equalTo(streetName));
+    }
+
+    @Given("^I perform authentication operation for \"([^\"]*)\" with body$")
+    public void iPerformAuthenticationOperationForWithBody(String url, DataTable table) throws Throwable {
+        List<List<String>> data = table.raw();
+
+        HashMap<String, String> body = new HashMap<>();
+        body.put("email", data.get(1).get(0));
+        body.put("password", data.get(1).get(1));
+
+        response = RestAssuredExtension.PostOpsWithBody(url, body);
+    }
+
+    @Then("^I should see the author name as \"([^\"]*)\" with json validation$")
+    public void iShouldSeeTheAuthorNameAsWithJsonValidation(String arg0) throws Throwable {
+        String responseBody = response.getBody().asString();
+
+        assertThat(responseBody, matchesJsonSchemaInClasspath("post.json"));
     }
 }

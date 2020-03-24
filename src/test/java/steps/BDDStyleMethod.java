@@ -40,8 +40,8 @@ public class BDDStyleMethod {
                 .when()
                 .get("http://localhost:3000/posts")
                 .then()
-                .body("author", hasItem("typicode"));
-//                .body("author", hasSize(2));
+//                .body("author", hasItem("typicode"));
+                .body("author", hasSize(2));
     }
 
     public static void PostWithParam() {

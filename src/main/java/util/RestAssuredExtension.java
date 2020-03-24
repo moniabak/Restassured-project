@@ -1,9 +1,11 @@
 package util;
 
+import cucumber.api.StepDefinitionReporter;
 import cucumber.api.java.it.Ma;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
+import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
 import io.restassured.specification.RequestSpecification;
@@ -45,25 +47,36 @@ public class RestAssuredExtension {
         return null;
     }
 
-    public static ResponseOptions<Response> PostOpsWithParams(String url, Map<String, String> params, Map<String, String> body){
+    public static ResponseOptions<Response> GetOpsWithToken(String url, String token) {
+        //Act
+        try {
+            request.header(new Header("Authorization", "Bearer " + token));
+            return request.get(new URI(url));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ResponseOptions<Response> PostOpsWithParams(String url, Map<String, String> params, Map<String, String> body) {
 
         request.pathParams(params);
         request.body(body);
         return request.post(url);
     }
 
-    public static ResponseOptions<Response> PostOpsWithBody(String url, Map<String, String> body){
+    public static ResponseOptions<Response> PostOpsWithBody(String url, Map<String, String> body) {
         request.body(body);
         return request.post(url);
     }
 
-    public static ResponseOptions<Response> DeleteWithParam(String url, Map<String, String> param){
+    public static ResponseOptions<Response> DeleteWithParam(String url, Map<String, String> param) {
         request.pathParams(param);
         return request.delete(url);
     }
 
-    public static ResponseOptions<Response> GetWithPathParams(String url, Map<String, String> params){
-        request.pathParams(params);
+    public static ResponseOptions<Response> GetWithPathParams(String url, Map<String, String> body) {
+        request.body(body);
         return request.get(url);
     }
 
@@ -71,5 +84,11 @@ public class RestAssuredExtension {
         request.pathParams(params);
         request.body(body);
         return request.put(url);
+    }
+
+    public static ResponseOptions<Response> GetWithParamWithToken(String url, Map<String, String> params, String token) {
+        request.header(new Header("Authorization", "Bearer " + token));
+        request.queryParams(params);
+        return request.get(url);
     }
 }

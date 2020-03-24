@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class DELETEPostSteps {
+public class DeletePostSteps {
     private ResponseOptions<Response> response;
 
     @Given("^I ensure to POST for \"([^\"]*)\" with body as$")
