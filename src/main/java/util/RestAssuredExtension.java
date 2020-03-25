@@ -1,7 +1,5 @@
 package util;
 
-import cucumber.api.StepDefinitionReporter;
-import cucumber.api.java.it.Ma;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -9,7 +7,6 @@ import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
 import io.restassured.specification.RequestSpecification;
-import javafx.util.Builder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -88,7 +85,7 @@ public class RestAssuredExtension {
 
     public static ResponseOptions<Response> GetWithParamWithToken(String url, Map<String, String> params, String token) {
         request.header(new Header("Authorization", "Bearer " + token));
-        request.queryParams(params);
+        request.body(params);
         return request.get(url);
     }
 }
