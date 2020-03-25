@@ -34,13 +34,7 @@ public class GetPostSteps {
 
     @Then("^I should see the author name as \"([^\"]*)\"$")
     public void iShouldSeeTheAuthorNameAs(String authorName) throws Throwable {
-
-        //With builder pattern
-        Posts posts = new Posts.Builder().build();
-        Posts post = response.getBody().as(posts.getClass());
-
-        //without builder pattern
-//        Posts posts = response.getBody().as(Posts.class);
+        Posts post = response.getBody().as(Posts.class);
         assertThat(post.getAuthor(), equalTo(authorName));
     }
 

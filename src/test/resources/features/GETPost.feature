@@ -1,7 +1,6 @@
-Feature:
-  Verify GET
+Feature: Verify GET
 
-  Scenario: Verify author of the post
+  Scenario: Verify author of the exact post
     Given I perform GET for "/posts/1"
     Then I should see the author name as "typicode"
 
