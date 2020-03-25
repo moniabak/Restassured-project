@@ -5,6 +5,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseOptions;
+import steps.BDDStyle.BDDStyleMethod;
 import util.RestAssuredExtension;
 
 import java.util.HashMap;
@@ -33,5 +34,10 @@ public class PostProfile {
     @Then("^I should see the body has name as \"([^\"]*)\"$")
     public void iShouldSeeTheBodyHasNameAs(String name) throws Throwable {
         assertThat(response.getBody().jsonPath().get("name"), equalTo(name));
+    }
+
+    @Given("^I perform POST for \"([^\"]*)\"$")
+    public void iPerformPOSTFor(String arg0) throws Throwable {
+        BDDStyleMethod.PostWithParam();
     }
 }

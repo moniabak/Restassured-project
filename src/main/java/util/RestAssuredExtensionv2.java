@@ -80,4 +80,8 @@ public class RestAssuredExtensionv2 {
         builder.addPathParams(params);
         return ExecuteAPI();
     }
+
+    public ResponseOptions<Response> ExecuteRequest(){
+        return ExecuteAPI();
+    }
 }

@@ -1,4 +1,4 @@
-package steps;
+package steps.BDDStyle;
 
 import io.restassured.http.ContentType;
 import org.hamcrest.core.Is;

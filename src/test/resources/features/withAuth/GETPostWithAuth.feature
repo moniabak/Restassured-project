@@ -1,23 +1,11 @@
 Feature: Verify GET
 
-  Scenario: Verify author of the exact post
-    Given I perform GET for "/posts/1"
-    Then I should see the author name as "typicode"
-
-  Scenario: Verify authors of the post
-    Given I perform GET for "/posts"
-    Then I should see the author names
-
-  Scenario: Verify results after set parameters for Get
-    Given I perform GET for "/posts"
-    Then I should see verify Get param
-
   Scenario: Verify GET with bearer authentication token
     Given I perform authentication operation for "/auth/login" with body
       | email          | password |
       | mbak@gmail.com | pass123  |
-    Given I perform GET for "/posts/1"
-    Then I should see the author name as "Monika Bak"
+    Given I perform GET operation for "/posts/1"
+    Then I should see the author name as "typicode" with auth
 
   Scenario: Verify street of complex data
     Given I perform authentication operation for "/auth/login" with body
@@ -32,5 +20,5 @@ Feature: Verify GET
     Given I perform authentication operation for "/auth/login" with body
       | email          | password |
       | mbak@gmail.com | pass123  |
-    Given I perform GET for "/posts/1"
-    Then I should see the author name as "Monika Bak" with json validation
+    And I perform GET operation for "/posts/1"
+    Then I should see response body as json validation
